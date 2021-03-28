@@ -15,9 +15,9 @@ def index():
     elif request.method == 'POST':
         if new_item := request.form['field_name']:
             add_item(new_item)
-        deleted_items_ids = [key[7:] for key in request.form.keys() if key.startswith('delete_')]
-        if len(deleted_items_ids) > 0:
-            for id in deleted_items_ids:
+
+        if deleted_item_ids := [key[7:] for key in request.form.keys() if key.startswith('delete_')]:
+            for id in deleted_item_ids:
                 delete_item(id)
             return redirect('/')
 
