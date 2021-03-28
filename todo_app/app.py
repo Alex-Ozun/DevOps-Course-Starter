@@ -1,6 +1,6 @@
-from flask import abort, Flask, render_template, request, redirect
+from flask import abort, Flask, render_template, request, redirect, url_for
 from flask import session
-from todo_app.data.session_items import add_item, get_item, get_items, save_item
+from todo_app.data.session_items import add_item, delete_item, get_item, get_items, save_item
 from todo_app.flask_config import Config
 
 app = Flask(__name__)
@@ -9,12 +9,18 @@ app.config.from_object(Config)
 @app.route('/', methods=['POST', 'GET'])
 def index():
     items = get_items()
+        
     if request.method == 'GET':
         items.sort(key=is_checked)
         return render_template('index.html', items=items)
     elif request.method == 'POST':
         if new_item := request.form['field_name']:
             add_item(new_item)
+        deleted_items_ids = [key[7:] for key in request.form.keys() if key.startswith('delete_')]
+        if len(deleted_items_ids) > 0:
+            for id in deleted_items_ids:
+                delete_item(id)
+            return redirect('/')
 
         all_ids = [str(item['id']) for item in items]
         checked_item_ids = request.form.getlist('item')
@@ -36,6 +42,11 @@ def index():
 @app.route('/logout')
 def logout():
     session.clear()
+    return redirect('/')
+
+@app.route('/delete/<int:id>', methods=['POST'])
+def delete(id):
+    delete_item(id)
     return redirect('/')
 
 def is_checked(item) -> bool:

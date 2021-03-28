@@ -14,13 +14,14 @@
         <form action="" method="POST">
           {% for item in items %}
             <div>
-              <input type="checkbox" id="item" name="item" value={{ item.id }}
-              {% if item.checked %} checked {% endif %}>
-              <label for={{ item.id }}>{{ item.title }}</label>
+                <input type="checkbox" id="item" name="item" value={{ item.id }}
+                {% if item.checked %} checked {% endif %}>
+                <label for={{ item.id }}>{{ item.title }}</label>
+                <input type="submit" name="delete_{{ item.id }}" value="Delete">
             </div>
           {% endfor %}
           <input type="submit" value="Save">
-        <div>
+          <div>
             <label for="field_name">Add new item: </label>
             <input type="text" name="field_name" id="field_name">
             <input type="submit" value="Submit">
