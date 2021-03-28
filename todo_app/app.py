@@ -1,5 +1,4 @@
-from flask import abort, Flask, render_template, request, redirect, url_for
-from flask import session
+from flask import abort, Flask, render_template, request, redirect, session, url_for
 from todo_app.data.session_items import add_item, delete_item, get_item, get_items, save_item
 from todo_app.flask_config import Config
 
@@ -39,18 +38,16 @@ def index():
     else:
         abort(405)
 
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect('/')
 
-@app.route('/delete/<int:id>', methods=['POST'])
-def delete(id):
-    delete_item(id)
-    return redirect('/')
 
 def is_checked(item) -> bool:
-  return item['checked'] if item['checked'] else False
+  return item['checked']
+
 
 if __name__ == '__main__':
     app.run()
