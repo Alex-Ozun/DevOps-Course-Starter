@@ -1,6 +1,6 @@
-from flask import abort, Flask, render_template, request, redirect, url_for
-
-from todo_app.data.session_items import get_items, add_item
+from flask import abort, Flask, render_template, request, redirect
+from flask import session
+from todo_app.data.session_items import add_item, get_item, get_items, save_item
 from todo_app.flask_config import Config
 
 app = Flask(__name__)
@@ -8,14 +8,38 @@ app.config.from_object(Config)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    items = get_items()
     if request.method == 'GET':
-        items = get_items()
+        items.sort(key=is_checked)
         return render_template('index.html', items=items)
     elif request.method == 'POST':
-        add_item(request.form['new_item'])
-        return redirect(url_for('index'))
+        if new_item := request.form['field_name']:
+            add_item(new_item)
+
+        all_ids = [str(item['id']) for item in items]
+        checked_item_ids = request.form.getlist('item')
+        checked_items = [get_item(id) for id in checked_item_ids]
+        unchecked_items = [get_item(id) for id in all_ids if id not in checked_item_ids]
+
+        for item in checked_items:
+            item['checked'] = True
+            save_item(item)
+
+        for item in unchecked_items:
+            item['checked'] = False
+            save_item(item)
+
+        return redirect('/')
     else:
         abort(405)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+def is_checked(item) -> bool:
+  return item['checked'] if item['checked'] else False
 
 if __name__ == '__main__':
     app.run()

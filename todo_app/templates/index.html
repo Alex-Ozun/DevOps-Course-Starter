@@ -11,13 +11,20 @@
     <div class="col-md-12">
       <h2>Items</h2>
       <ul class="list-group mb-4">
-        {% for item in items %}
-          <li>{{ item.title }}</li>
-        {% endfor %}
         <form action="" method="POST">
-            <label for="new_item">Add new item: </label>
-            <input type="text" name="new_item" id="new_item" required>
-            <input type="submit" value="Subscribe!">
+          {% for item in items %}
+            <div>
+              <input type="checkbox" id="item" name="item" value={{ item.id }}
+              {% if item.checked %} checked {% endif %}>
+              <label for={{ item.id }}>{{ item.title }}</label>
+            </div>
+          {% endfor %}
+          <input type="submit" value="Save">
+        <div>
+            <label for="field_name">Add new item: </label>
+            <input type="text" name="field_name" id="field_name">
+            <input type="submit" value="Submit">
+          </div>
         </form>
       </ul>
     </div>
