@@ -1,38 +1,45 @@
 from flask import abort, Flask, render_template, request, redirect, session, url_for
-from todo_app.data.session_items import add_item, delete_item, get_item, get_items, save_item
+from todo_app.data.trello_api import Trello
 from todo_app.flask_config import Config
+from os import environ
+
+BOARD_KEY = environ.get('BOARD_KEY')
+TRELLO_KEY = environ.get('TRELLO_KEY')
+TRELLO_TOKEN = environ.get('TRELLO_TOKEN')
 
 app = Flask(__name__)
 app.config.from_object(Config)
+trello = Trello(BOARD_KEY, TRELLO_KEY, TRELLO_TOKEN)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    items = get_items()
+    items = trello.get_all_cards()
         
     if request.method == 'GET':
         items.sort(key=is_checked)
         return render_template('index.html', items=items)
     elif request.method == 'POST':
         if new_item := request.form['field_name']:
-            add_item(new_item)
+            trello.add_card(new_item)
 
         if deleted_item_ids := [key[7:] for key in request.form.keys() if key.startswith('delete_')]:
+            print(deleted_item_ids)
             for id in deleted_item_ids:
-                delete_item(id)
+                trello.delete_item(id)
             return redirect('/')
 
-        all_ids = [str(item['id']) for item in items]
+        all_ids = [str(item.id) for item in items]
         checked_item_ids = request.form.getlist('item')
-        checked_items = [get_item(id) for id in checked_item_ids]
-        unchecked_items = [get_item(id) for id in all_ids if id not in checked_item_ids]
+        checked_items = [trello.get_card(id) for id in checked_item_ids]
+        unchecked_items = [trello.get_card(id) for id in all_ids if id not in checked_item_ids]
 
         for item in checked_items:
-            item['checked'] = True
-            save_item(item)
+            item.checked = True
+            trello.save_card(item)
 
         for item in unchecked_items:
-            item['checked'] = False
-            save_item(item)
+            item.checked = False
+            trello.save_card(item)
 
         return redirect('/')
     else:
@@ -46,7 +53,7 @@ def logout():
 
 
 def is_checked(item) -> bool:
-  return item['checked']
+  return item.checked
 
 
 if __name__ == '__main__':
