@@ -9,20 +9,29 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
+      <h2>To Do</h2>
       <ul class="list-group mb-4">
         <form action="" method="POST">
-          {% for item in items %}
+          {% for card in view_model.todo_cards() %}
             <div>
-                <input type="checkbox" id="item" name="item" value={{ item.id }}
-                {% if item.checked %} checked {% endif %}>
-                <label for={{ item.id }}>{{ item.title }}</label>
-                <input type="submit" name="delete_{{ item.id }}" value="Delete">
+                <input type="checkbox" id="card" name="card" value={{ card.id }}
+                {% if card.checked %} checked {% endif %}>
+                <label for={{ card.id }}>{{ card.title }}</label>
+                <input type="submit" name="delete_{{ card.id }}" value="Delete">
             </div>
           {% endfor %}
+          <h2>Done</h2>
+          {% for card in view_model.done_cards() %}
+          <div>
+              <input type="checkbox" id="card" name="card" value={{ card.id }}
+              {% if card.checked %} checked {% endif %}>
+              <label for={{ card.id }}>{{ card.title }}</label>
+              <input type="submit" name="delete_{{ card.id }}" value="Delete">
+          </div>
+        {% endfor %}
           <input type="submit" value="Save">
           <div>
-            <label for="field_name">Add new item: </label>
+            <label for="field_name">Add new card: </label>
             <input type="text" name="field_name" id="field_name">
             <input type="submit" value="Submit">
           </div>
