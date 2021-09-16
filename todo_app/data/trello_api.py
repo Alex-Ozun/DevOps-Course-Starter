@@ -1,16 +1,12 @@
+from dataclasses import dataclass
 import requests
 
+@dataclass
 class Card:
     id: str
     list_id: str
     title: str
     checked: bool
-
-    def __init__(self, id: str, list_id: str, title: str, checked: bool):
-        self.id = id
-        self.list_id = list_id
-        self.title = title
-        self.checked = checked
 
 class Trello:
     list_id_done: str
