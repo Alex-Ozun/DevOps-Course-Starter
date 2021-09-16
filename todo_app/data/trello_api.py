@@ -8,20 +8,13 @@ class Card:
     title: str
     checked: bool
 
+@dataclass
 class Trello:
-    list_id_done: str
-    list_id_todo: str
     board_id: str
     key: str
     token: str
-
-    def __init__(self, board_id: str, key: str, token: str):
-        self.key = key
-        self.token = token
-        self.board_id = board_id
-        self.list_id_done = None
-        self.list_id_todo = None
-        self.prepare_board()
+    list_id_done: str = None
+    list_id_todo: str = None
 
     def get_cards(self):
         """
@@ -113,6 +106,7 @@ class Trello:
         """
         Fetches all cards on Trello board
         """
+        self.prepare_board()
         lists = self.get_lists_on_board()
 
         for list in lists:
