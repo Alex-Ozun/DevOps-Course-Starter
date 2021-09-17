@@ -118,3 +118,9 @@ env/
 
 ### Configuration files ###
 .env
+
+### Binaries ###
+bin/*
+
+### Webdriver artefacts ###
+geckodriver.log
