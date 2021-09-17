@@ -53,4 +53,10 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ## Testing
 
- To run the unit and integrations tests, run `poetry run pytest tests`.
+To run the unit and integrations tests, run `poetry run pytest tests`.
+
+To run E2E tests:
+1. [Install](https://www.mozilla.org/en-GB/firefox/new/) Firefox Browser.
+1. [Download](https://github.com/mozilla/geckodriver/releases) `geckodriver` that is compatible with your OS and CPU.
+1. Move `geckodriver` binary to the `bin` directory.
+1. Run `poetry run pytest tests_e2e`
