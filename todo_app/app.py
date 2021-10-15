@@ -12,9 +12,6 @@ def create_app():
 
     app = Flask(__name__)
     app.config.from_object(Config)
-    print(BOARD_KEY)
-    print(TRELLO_KEY)
-    print(TRELLO_TOKEN)
     trello = Trello(board_id=BOARD_KEY, key=TRELLO_KEY, token=TRELLO_TOKEN)
 
     @app.route('/', methods=['POST', 'GET'])
