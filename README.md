@@ -4,6 +4,21 @@
 
 The project uses poetry for Python to create an isolated environment and manage package dependencies. To prepare your system, ensure you have an official distribution of Python version 3.7+ and install poetry using one of the following commands (as instructed by the [poetry documentation](https://python-poetry.org/docs/#system-requirements)):
 
+## Set Environment Variables
+
+Flast uses `.env` file to set environment variables when running `flask run`.
+
+1. Run `$ cp .env.template .env  # (first time only)`
+1. Add following variables in .env:
+- [`SECRET_KEY`](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY): used to encrypt the flask session cookie.
+- `TRELLO_KEY` and `TRELLO_TOKEN`: Trello API credentials which can be obtained from the [Trello Developer API keys page](https://trello.com/app-key).
+- `BOARD_KEY`: the KEY of the Trello board to use for the tasks.
+
+## Run with Vagrant
+
+1. Install [Vagrant](https://www.vagrantup.com/downloads) and [VirtualBox](https://www.virtualbox.org/)
+1. Run `vagrant up` in the project directory. The initial set-up process will take a few minutes, and then the application will run on [`http://localhost:5000/`](http://localhost:5000/). The application logs can be found in `.vagrant/log.txt`.
+
 ### Poetry installation (Bash)
 
 ```bash
