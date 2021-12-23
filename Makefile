@@ -11,4 +11,3 @@ ifdef dev
 else
 	docker run -p 80:5050 --env-file ./.env todo-app:prod
 endif
-	
