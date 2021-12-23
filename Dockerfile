@@ -13,3 +13,6 @@ ENTRYPOINT poetry run flask run -h 0.0.0.0 -p 5050
 FROM base as production
 RUN poetry add gunicorn
 ENTRYPOINT poetry run gunicorn "todo_app.app:create_app()" --bind 0.0.0.0:5050
+
+FROM base as test
+ENTRYPOINT poetry run pytest tests

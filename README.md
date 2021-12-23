@@ -20,13 +20,19 @@ Install the latest version of [Docker](https://docs.docker.com/engine/install/)
 
 **Development Mode**
 
-1. Build image with `make build dev=true`.
-1. Run container with `make run dev=true`.
+Run 
+
+```bash 
+docker compose up
+```
 
 **Production Mode**
 
-1. Build image with `make build`.
-1. Run container with `make run`.
+Run 
+
+```bash 
+make
+```
 
 ## Run with Vagrant
 
