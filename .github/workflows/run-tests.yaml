@@ -1,0 +1,26 @@
+name: Run Tests
+on:
+  pull_request:
+    types: [opened, reopened]
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Build Docker container
+        run: docker build --target test --tag todo-app:test .
+      - name: Run unit & integration tests
+        run: docker run
+               --env-file=.env.test
+               todo-app:test
+               tests/unit
+               tests/integration
+      - name: Run end to end tests
+        run: docker run
+               --env SECRET_KEY=${{ secrets.SECRET_KEY }}
+               --env TRELLO_KEY=${{ secrets.TRELLO_KEY }}
+               --env TRELLO_TOKEN=${{ secrets.TRELLO_TOKEN }}
+               --env BOARD_KEY=${{ secrets.BOARD_KEY }}
+               todo-app:test
+               tests/e2e/test_chromium.py

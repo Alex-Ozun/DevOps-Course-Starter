@@ -5,7 +5,7 @@
 .vagrant
 .git
 .github
-tests_e2e
+bin
 Vagrantfile
 Dockerfile
 README.md
