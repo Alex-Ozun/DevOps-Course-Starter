@@ -14,44 +14,55 @@ Flast uses `.env` file to set environment variables when running `flask run`.
 - `TRELLO_KEY` and `TRELLO_TOKEN`: Trello API credentials which can be obtained from the [Trello Developer API keys page](https://trello.com/app-key).
 - `BOARD_KEY`: the KEY of the Trello board to use for the tasks.
 
+## Run with Docker
+
+Install the latest version of [Docker](https://docs.docker.com/engine/install/)
+
+**Development Mode**
+
+Run 
+
+```bash 
+docker compose up
+```
+
+**Production Mode**
+
+Run 
+
+```bash 
+make
+```
+
 ## Run with Vagrant
 
 1. Install [Vagrant](https://www.vagrantup.com/downloads) and [VirtualBox](https://www.virtualbox.org/)
 1. Run `vagrant up` in the project directory. The initial set-up process will take a few minutes, and then the application will run on [`http://localhost:5000/`](http://localhost:5000/). The application logs can be found in `.vagrant/log.txt`.
 
-### Poetry installation (Bash)
+## Run Manually
+
+- Install `poetry`: 
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 ```
 
-### Poetry installation (PowerShell)
-
-```powershell
-(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
-```
-
-## Dependencies
-
-The project uses a virtual environment to isolate package dependencies. To create the virtual environment and install required packages, run the following from your preferred shell:
+- Install Dependencies. The project uses a virtual environment to isolate package dependencies. To create the virtual environment and install required packages, run the following from your preferred shell:
 
 ```bash
-$ poetry install
+poetry install
 ```
 
-You'll also need to clone a new `.env` file from the `.env.template` to store local configuration options. This is a one-time operation on first setup:
+- You'll also need to clone a new `.env` file from the `.env.template` to store local configuration options. This is a one-time operation on first setup. The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 
 ```bash
-$ cp .env.template .env  # (first time only)
+cp .env.template .env  # (first time only)
 ```
 
-The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
+- Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
 
-## Running the App
-
-Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
 ```bash
-$ poetry run flask run
+poetry run flask run
 ```
 
 You should see output similar to the following:

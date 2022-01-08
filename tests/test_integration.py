@@ -1,5 +1,6 @@
 import dotenv
 from os import getenv
+from pathlib import Path
 import pytest
 import unittest.mock
 
@@ -7,7 +8,7 @@ import todo_app.app
 
 @pytest.fixture
 def client():
-    file_path = dotenv.find_dotenv('.env.test')
+    file_path = Path.cwd().joinpath(".env.test")
     dotenv.load_dotenv(file_path, override=True)
     test_app = todo_app.app.create_app()
     with test_app.test_client() as client:

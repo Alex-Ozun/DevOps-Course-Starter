@@ -1,0 +1,11 @@
+.venv
+.env
+.env.template
+.gitignore
+.vagrant
+.git
+.github
+tests_e2e
+Vagrantfile
+Dockerfile
+README.md
