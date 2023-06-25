@@ -1,5 +1,8 @@
 name: Run Tests
 on:
+  push:
+    paths-ignore:
+      - 'README.md'
   pull_request:
     types: [opened, reopened]
 jobs:
@@ -27,30 +30,30 @@ jobs:
 
   deploy:
     name: Deploy into production
-    needs: run-tests
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    # needs: run-tests
+    # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
     env:
-      HEROKU_API_KEY: "${{ secrets.HEROKU_TOKEN }}"
-      DOCKER_LOGIN: "${{ secrets.DOCKER_LOGIN }}"
+      HEROKU_API_KEY: "${{ secrets.HEROKU_API_KEY }}"
+      DOCKER_USERNAME: "${{ secrets.DOCKER_USERNAME }}"
       DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
     steps:
     - uses: actions/checkout@v1
-    - name: login to Docker Hub
-      run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_LOGIN --password-stdin
-    - name: build production docker image
-      run: docker build --target production --tag DOCKER_LOGIN/todo-app-production:${GITHUB_SHA::6} --tag $DOCKER_LOGIN/todo-app-production:latest .
-    - name: push commit hash tagged build to Docker Hub
-      run: docker push $DOCKER_LOGIN/todo-app-production:${GITHUB_SHA::6}
-    - name: push latest tagged build to Docker Hub
-      run: docker push $DOCKER_LOGIN/todo-app-production:latest
-    - name: pull production image from Docker Hub
-      run: docker pull $DOCKER_LOGIN/todo-app-production:latest
-    - name: tag production image for deployment to heroku
-      run: docker tag $DOCKER_LOGIN/todo-app-production:latest registry.heroku.com/todo-app-devops-academy/web
-    - name: login to docker on the heroku registry
-      run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-    - name: push production image to heroku registry
-      run: docker push registry.heroku.com/todo-app-devops-academy/web
-    - name: release the container on the heroku registry
-      run: HEROKU_API_KEY=$HEROKU_API_KEY heroku container:release -a todo-app-devops-academy web 
+    - name: Login to Docker Hub
+      run: echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+    - name: Build production docker image
+      run: docker build --target production --tag $DOCKER_USERNAME/todo-app-production:${GITHUB_SHA::6} --tag $DOCKER_USERNAME/todo-app-production:latest .
+    - name: Push commit hash tagged build to Docker Hub
+      run: docker push $DOCKER_USERNAME/todo-app-production:${GITHUB_SHA::6}
+    - name: Push latest tagged build to Docker Hub
+      run: docker push $DOCKER_USERNAME/todo-app-production:latest
+    - name: Pull production image from Docker Hub
+      run: docker pull $DOCKER_USERNAME/todo-app-production:latest
+    - name: Tag production image on Heroku
+      run: docker tag $DOCKER_USERNAME/todo-app-production:latest registry.heroku.com/$DOCKER_USERNAME-todo/web
+    - name: Login to Heroku registry
+      run: echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+    - name: Push production image to Heroku registry
+      run: docker push registry.heroku.com/$DOCKER_USERNAME-todo/web
+    - name: Release the container on the Heroku registry
+      run: HEROKU_API_KEY=$HEROKU_API_KEY heroku container:release -a $DOCKER_USERNAME-todo web 
