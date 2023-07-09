@@ -30,8 +30,8 @@ jobs:
 
   deploy:
     name: Deploy into production
-    # needs: run-tests
-    # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    needs: run-tests
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
     env:
       HEROKU_API_KEY: "${{ secrets.HEROKU_API_KEY }}"
